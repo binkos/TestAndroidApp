@@ -11,7 +11,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     static final String COLUMN_ID ="_id";
     static final String COLUMN_NAME = "name";
     static final String COLUMN_YEAR = "year";
-    //static final String COLUMN_IMAGE = "image";
+    static final String COLUMN_IMAGE = "image";
 
     public DataBaseHelper(Context context) {
         super(context, TABLE_NAME, null, SCHEME);
@@ -20,7 +20,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS "+ DATABASE + " ("+COLUMN_ID+" INTEGER PRIMARY KEY AUTOINCREMENT,"
-                +COLUMN_NAME+" TEXT,"+COLUMN_YEAR+" INTEGER);");
+                +COLUMN_NAME+" TEXT,"+COLUMN_YEAR+" INTEGER,"+ COLUMN_IMAGE+" BLOB);");
     }
 
     @Override
