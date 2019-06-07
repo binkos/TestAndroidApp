@@ -107,8 +107,12 @@ public class UserActivity extends AppCompatActivity {
         if (resultCode==RESULT_OK&&reqCode==1) {
 
                 bundle = data.getExtras();
-                
+                try{
                 cameraPicture = (Bitmap) bundle.get("data");
+                }
+                catch(NullPointerException e){
+                    e.printStackTrace();
+                }
                 stream = new ByteArrayOutputStream();
                 cameraPicture.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byteArray = stream.toByteArray();
