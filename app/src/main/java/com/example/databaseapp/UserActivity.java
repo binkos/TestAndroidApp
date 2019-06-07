@@ -13,8 +13,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.util.Objects;
 
 
 public class UserActivity extends AppCompatActivity {
@@ -54,8 +56,12 @@ public class UserActivity extends AppCompatActivity {
 
         etName.setText(cursor.getString(1));
         etYear.setText(String.valueOf(cursor.getInt(2)));
-     //   ivIMG.setImageBitmap(BitmapFactory.decodeByteArray(cursor.getBlob(3),0,cursor.getBlob(3).length));
-
+        if(cursor.getBlob(3)==null){Toast.makeText(this,"didn't get a byteArray ",Toast.LENGTH_SHORT).show();}
+        else {
+        ivIMG.setImageBitmap(BitmapFactory.decodeByteArray(cursor.getBlob(3),0,cursor.getBlob(3).length));
+        byteArray = cursor.getBlob(3);
+            Toast.makeText(this,"length of byteArray "+byteArray.length,Toast.LENGTH_LONG).show();
+     }
         cursor.close();
         }
         else {
@@ -73,7 +79,7 @@ public class UserActivity extends AppCompatActivity {
         ContentValues contentValues = new ContentValues();
         contentValues.put("name",etName.getText().toString());
         contentValues.put("year",etYear.getText().toString());
-        contentValues.put("image",byteArray);
+        contentValues.put("image", byteArray);
 
         if (userId>0){
             db.update(DataBaseHelper.DATABASE,contentValues,DataBaseHelper.COLUMN_ID+"=?",new String[]{String.valueOf(userId)});
@@ -91,28 +97,15 @@ public class UserActivity extends AppCompatActivity {
 
     public void goHome(){
         db.close();
-        bundle.clear();
-        cameraPicture.recycle();
-        try {
-            stream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         startActivity(new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
     }
 
     @Override
     public void onActivityResult(int reqCode,int resultCode, Intent data){
-        if(data==null){return;}
         if (resultCode==RESULT_OK&&reqCode==1) {
-
                 bundle = data.getExtras();
-                try{
-                cameraPicture = (Bitmap) bundle.get("data");
-                }
-                catch(NullPointerException e){
-                    e.printStackTrace();
-                }
+                cameraPicture = (Bitmap) Objects.requireNonNull(bundle).get("data");
+
                 stream = new ByteArrayOutputStream();
                 cameraPicture.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byteArray = stream.toByteArray();
@@ -120,5 +113,6 @@ public class UserActivity extends AppCompatActivity {
 
 
         }
+
     }
 }
