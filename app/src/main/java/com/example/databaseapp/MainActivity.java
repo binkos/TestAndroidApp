@@ -47,12 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         db = dataBaseHelper.getReadableDatabase();
         cursor = db.rawQuery("SELECT * FROM " +DataBaseHelper.DATABASE,null);
-
-        userAdapter = new SimpleCursorAdapter(getApplicationContext(),R.layout.list_image_name_year,cursor,
-                                  new String[]{DataBaseHelper.COLUMN_NAME,DataBaseHelper.COLUMN_YEAR},
-                                  new int[]{R.id.etName,R.id.etYear},0);
-
-        listView.setAdapter(userAdapter);
     }
 
     public void add(View view){
