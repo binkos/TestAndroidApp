@@ -16,6 +16,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     DataBaseHelper dataBaseHelper;
@@ -23,8 +25,8 @@ public class MainActivity extends AppCompatActivity {
     Button addButton;
     ListView listView;
     Cursor cursor;
-    SimpleCursorAdapter userAdapter;
-
+    ArrayList<People> list;
+    PeopleListAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +47,26 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
 
+        list = new ArrayList<>();
+        adapter = new PeopleListAdapter(this,R.layout.list_image_name_year,list);
+        listView.setAdapter(adapter);
+
         db = dataBaseHelper.getReadableDatabase();
         cursor = db.rawQuery("SELECT * FROM " +DataBaseHelper.DATABASE,null);
+        cursor.moveToFirst();
+        list.clear();
+
+        while (cursor.moveToNext()){
+            int id = cursor.getInt(0);
+            String name = cursor.getString(1);
+            int year = cursor.getInt(2);
+            byte[] image = cursor.getBlob(3);
+
+            list.add(new People(id,name,year,image));
+        }
+        adapter.notifyDataSetChanged();
+
+
     }
 
     public void add(View view){
