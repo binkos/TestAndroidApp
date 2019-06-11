@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import androidx.annotation.RecentlyNonNull;
 
 public class PeopleListAdapter extends ArrayAdapter<People> {
 
