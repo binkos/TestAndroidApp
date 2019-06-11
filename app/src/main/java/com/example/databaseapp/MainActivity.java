@@ -48,13 +48,17 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         list = new ArrayList<>();
+        list.clear();
+        list.add(new People(0,"Vlad",100,null));
+
         adapter = new PeopleListAdapter(this,R.layout.list_image_name_year,list);
-        listView.setAdapter(adapter);
+
 
         db = dataBaseHelper.getReadableDatabase();
         cursor = db.rawQuery("SELECT * FROM " +DataBaseHelper.DATABASE,null);
         cursor.moveToFirst();
-        list.clear();
+
+        listView.setAdapter(adapter);
 
         while (cursor.moveToNext()){
             int id = cursor.getInt(0);
